@@ -9,17 +9,19 @@ variable "region" {
 variable "name" {
   description = "name of the service"
 }
+
 variable "appname" {
   description = "appname of the service"
 }
 
 variable "zone_domain" {
   description = "zone_domain"
-  default = ""
+  default     = ""
 }
+
 variable "app_subdomain" {
   description = "app_subdomain"
-  default = ""
+  default     = ""
 }
 
 variable "alb_dns_name" {
@@ -38,6 +40,7 @@ variable "alb_rule_priority" {
 variable "cpu" {
   description = "cpu of the service"
 }
+
 variable "memory" {
   description = "memory of the service"
 }
@@ -49,6 +52,7 @@ variable "port" {
 variable "desired_count" {
   description = "the desired_count"
 }
+
 variable "autoscale_max" {
   description = "the autoscale_max"
 }
@@ -56,6 +60,7 @@ variable "autoscale_max" {
 variable "image" {
   description = "image url service without tag"
 }
+
 variable "image_tag" {
   description = "tag of the image service"
 }
@@ -67,6 +72,7 @@ variable "task_template" {
 variable "cluster_id" {
   description = "the cluster id"
 }
+
 variable "cluster_name" {
   description = "the cluster name"
 }
@@ -92,17 +98,23 @@ variable "vpc_id" {
 }
 
 variable "availability_zones" {
-  type        = "list"
+  type        = list(string)
   description = "The azs to use"
 }
 
 variable "security_groups_ids" {
-  type        = "list"
+  type        = list(string)
   description = "The SGs to use"
 }
 
 variable "private_subnets_ids" {
-  type        = "list"
+  type        = list(string)
   description = "The private subnets to use"
+}
+
+// https://discuss.hashicorp.com/t/tips-howto-implement-module-depends-on-emulation/2305/2
+variable "tg_depends_on" {
+  type    = any
+  default = null
 }
 

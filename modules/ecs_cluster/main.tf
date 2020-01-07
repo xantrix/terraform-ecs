@@ -13,7 +13,7 @@ Application Load Balancer
 resource "aws_security_group" "alb_sg" {
   name        = "${var.environment}-alb-sg"
   description = "Allow HTTP/HTTPS from Anywhere into ALB"
-  vpc_id      = "${var.vpc_id}"
+  vpc_id      = var.vpc_id
 
   ingress {
     from_port   = 80
@@ -49,18 +49,19 @@ resource "aws_security_group" "alb_sg" {
 }
 
 resource "aws_alb" "alb" {
-  name            = "${var.environment}-alb"
-  subnets         = flatten(["${var.public_subnet_ids}"])
-  security_groups = flatten(["${var.security_groups_ids}", "${aws_security_group.alb_sg.id}"])
+  name = "${var.environment}-alb"
+
+  subnets         = var.public_subnet_ids
+  security_groups = flatten([var.security_groups_ids, aws_security_group.alb_sg.id])
 
   tags = {
     Name        = "${var.environment}-alb"
-    Environment = "${var.environment}"
+    Environment = var.environment
   }
 }
 
 resource "aws_alb_listener" "listener_http" {
-  load_balancer_arn = "${aws_alb.alb.arn}"
+  load_balancer_arn = aws_alb.alb.arn
   port              = "80"
   protocol          = "HTTP"
 
@@ -85,7 +86,6 @@ resource "aws_alb_listener" "listener_http" {
       status_code  = "404"
     }
   }
-
 }
 
 # data "aws_acm_certificate" "cert" {
@@ -115,3 +115,4 @@ resource "aws_alb_listener" "listener_http" {
 resource "aws_sns_topic" "topic_logs_watchers" {
   name = "LogsWatchers"
 }
+
